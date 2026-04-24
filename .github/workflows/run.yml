@@ -1,0 +1,28 @@
+name: 青龙面板自动签到
+on:
+  schedule:
+    - cron: '0 1 * * *'  # 每天凌晨1点自动运行，可修改
+  workflow_dispatch:  # 允许手动触发
+
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    steps:
+      - name: 拉取青龙代码
+        uses: actions/checkout@v4
+
+      - name: 安装 Node.js 环境
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: 安装依赖
+        run: |
+          npm install -g pnpm
+          pnpm install
+
+      - name: 启动青龙并运行脚本
+        run: |
+          pnpm start &
+          sleep 60  # 等青龙启动
+          # 这里可以直接调用青龙自带的定时任务，不用写单独的脚本
